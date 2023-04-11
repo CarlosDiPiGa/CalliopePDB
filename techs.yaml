@@ -1,0 +1,172 @@
+tech_groups:
+    supply:
+        constraints.lifetime: 50
+        constraints.energy_cap_max: inf
+        constraints.resource_unit: energy
+        costs.monetary.interest_rate: 0.1
+    supply_plus:
+        constraints.lifetime: 50
+        constraints.energy_cap_max: inf
+        constraints.resource_unit: energy
+        costs.monetary.interest_rate: 0.1
+    conversion:
+        constraints.lifetime: 50
+        constraints.energy_cap_max: inf
+        costs.monetary.interest_rate: 0.1
+    conversion_plus:
+        constraints.lifetime: 50
+        constraints.energy_cap_max: inf
+        costs.monetary.interest_rate: 0.1
+    transmission:
+        constraints.lifetime: 50
+        constraints.energy_cap_max: inf
+        costs.monetary.interest_rate: 0.1
+    storage:
+        constraints.lifetime: 50
+        constraints.storage_initial: 0
+        constraints.energy_cap_per_storage_cap_max: inf
+        constraints.storage_cap_max: inf
+        costs.monetary.interest_rate: 0.1
+
+techs:
+
+# Demand ------
+    demand_electricity:
+        essentials:
+            color: "#542788"
+            parent: demand
+            name: 'Electricity demand'
+            carrier_in: electricity
+        constraints.resource_unit: energy
+            
+    demand_marinefuel:
+        essentials:
+            color: "#542789"
+            parent: demand
+            name: 'Marine Fuel demand'
+            carrier_in: marine_fuel
+        constraints.resource_unit: energy
+        
+# Fuel Storage ------
+    LH2_storage:
+        essentials:
+            color:
+            parent: storage
+            name: 'Liquid Hydrogen storage'
+            carrier: liquid_hydrogen
+        
+    FTD_storage:
+        essentials:
+            color:
+            parent: storage
+            name: 'Fischer-Tropsch Diesel storage'
+            carrier: FT_diesel
+    
+
+# Fuel Production (Conversion techs) ------
+    electrolyser:
+        essentials:
+            color:
+            parent: conversion
+            name: 'PEM Electrolyser'
+            carrier_out: hydrogen_gas
+            carrier_in: electricity
+        constraints:
+            energy_con: true
+            energy_eff: 0.64
+        costs:
+            monetary:
+                energy_cap: 370 # EUR per kW
+                
+    liquefactor:
+        essentials:
+            color:
+            parent: conversion
+            name: 'Hydrogen Liquefactor'
+            carrier_out: liquid_hydrogen
+            carrier_in: hydrogen_gas
+        constraints:
+            energy_eff: 0.82
+        costs:
+            monetary:
+                energy_cap: 3925 # EUR per kW [@https://www.hydrogen.energy.gov/pdfs/19001_hydrogen_liquefaction_costs.pdf]
+                
+    FTreactor:
+        essentials:
+            color:
+            parent: conversion_plus
+            name: 'Fischer Tropsch Plant'
+            carrier_out: FT_diesel
+            carrier_in: electricity
+            carrier_in_2: hydrogen_gas
+            primary_carrier_in: electricity
+        constraints:
+            energy_eff: 1
+            carrier_ratios:
+                carrier_in.electricity: 1.6
+                carrier_in_2.hydrogen_gas: 0.638 #based on the molecular weight of Hydrogen and Carbon in FTD (n=15)
+                carrier_out.FT_diesel: 1
+            energy_con: true
+        costs:
+            monetary:
+                energy_cap: 1305 # EUR per kW [@https://www-sciencedirect-com.tudelft.idm.oclc.org/science/article/pii/S2212982021000548]
+            
+    ve:
+        essentials:
+            color:
+            parent: conversion_plus
+            name: 'Vessel engines'
+            carrier_out: marine_fuel
+            carrier_in: [FT_diesel, liquid_hydrogen]
+            primary_carrier_in: FT_diesel
+        constraints:
+            energy_eff: [0.5, 0.65]
+        costs:
+            monetary:
+                energy_cap: [0, 12937] # cost of refuelling station [own calculations based on Scaling law to estimate cost reductions]
+            
+
+# Transmission techs ------
+
+    electricity_lines:
+        essentials:
+            color: "#ABDDA4FF"
+            parent: transmission
+            name: 'Electricity lines'
+            carrier: electricity
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1  # electrical losses assumed negligible
+    
+    LH2_pipes:
+        essentials:
+            name: 'Liquid Hydrogen pipelines'
+            color: '#FF1493'
+            parent: transmission
+            carrier: liquid_hydrogen
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+                
+    FTD_pipes:
+        essentials:
+                name: 'Fischer-Tropsch Diesel pipelines'
+                color: '#00BFFF'
+                parent: transmission
+                carrier: FT_diesel
+        constraints:
+                energy_cap_max: inf
+                energy_eff: 1
+   
+
+# System supply -----
+    supply_elec:
+        essentials:
+            color: "#8073AC"
+            parent: supply
+            name: 'Electricity supply'
+            carrier: electricity
+        constraints:
+            energy_cap_max: inf
+        costs:
+            monetary.om_prod: 0.07 # € per kWh [@statista, 2023]

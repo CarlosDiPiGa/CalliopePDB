@@ -1,0 +1,126 @@
+locations:
+    CA: #Common Areas
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            supply_elec:
+            
+    FPC: #Fuel Production Center
+        techs:
+            electrolyser:
+            liquefactor:
+            FTreactor:
+    
+    FT: #Ferry Terminals - e for OPS; e/LH2/FTD for vessels
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            demand_marinefuel:
+                constraints:
+                    resource: file=demand_marinefuel.csv
+            ve:
+            LH2_storage:
+            FTD_storage:
+            
+    CrT: # Cruise Terminals - e for OPS; e/LH2/FTD for vessels
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            demand_marinefuel:
+                constraints:
+                    resource: file=demand_marinefuel.csv
+            ve:
+            LH2_storage:
+            FTD_storage:
+    
+    CoT: #Container Terminals - e for OPS and good handling; LH2/FTD for vessels
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            demand_marinefuel:
+                constraints:
+                    resource: file=demand_marinefuel.csv
+            ve:
+            LH2_storage:
+            FTD_storage:
+            
+    GCT: # General Cargo Terminals - e for OPS and good handling; LH2/FTD for vessels
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            demand_marinefuel:
+                constraints:
+                    resource: file=demand_marinefuel.csv
+            ve:
+            LH2_storage:
+            FTD_storage:
+            
+    BT: # Bulk Terminals - e for OPS and good handling; LH2/FTD for vessels
+        techs:
+            demand_electricity:
+                constraints:
+                    resource: file=demand_electricity.csv
+            demand_marinefuel:
+                constraints:
+                    resource: file=demand_marinefuel.csv
+            ve:
+            LH2_storage:
+            FTD_storage:
+
+links:
+# electricity
+    CA,FPC:
+        techs:
+            electricity_lines:
+        
+    CA,FT:
+        techs:
+            electricity_lines:
+    
+    CA,CrT:
+        techs:
+            electricity_lines:
+    
+    CA,CoT:
+        techs:
+            electricity_lines:
+    
+    CA,GCT:
+        techs:
+            electricity_lines:
+    
+    CA,BT:
+        techs:
+            electricity_lines:
+
+#fuel
+    FPC,FT:
+        techs:
+            LH2_pipes:
+            FTD_pipes:
+
+
+    FPC,CrT:
+        techs:
+            LH2_pipes:
+            FTD_pipes:
+
+    FPC,CoT:
+        techs:
+            LH2_pipes:
+            FTD_pipes:
+
+    FPC,GCT:
+        techs:
+            LH2_pipes:
+            FTD_pipes:
+
+    FPC,BT:
+        techs:
+            LH2_pipes:
+            FTD_pipes:
