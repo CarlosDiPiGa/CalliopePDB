@@ -1,0 +1,24 @@
+import:
+    - 'model_config/techs.yaml'
+    - 'model_config/locations.yaml'
+
+model:
+    timeseries_data_path: 'timeseries_data'
+    timeseries_dateformat: '%d/%m/%Y %H:%M'
+    name: dipietro-2023 Port de Barcelona
+    subset_time: ['2050-1-1 00:00', '2050-12-31 23:00']
+    file_allowed: ['energy_con']
+
+run:
+    solver: gurobi
+    mode: plan
+    ensure_feasibility: false # Switching on unmet demand
+    #bigM: 1e6 # setting the scale of unmet demand, which cannot be too high, otherwise the optimisation will not converge
+    cyclic_storage: true
+    objective_options:
+        cost_class: {'monetary':1}
+        sense: minimize
+    operation:
+        horizon: 48
+        window: 24
+    zero_threshold: 1
